@@ -1,18 +1,21 @@
 {
-  "name": "tanstack_start_ts",
-  "private": true,
-  "sideEffects": false,
+  "name": "xero-stationery-pro",
   "type": "module",
- "scripts": {
+  "scripts": {
     "dev": "vinxi dev",
     "build": "npx vinxi build",
     "start": "vinxi start",
     "preview": "vite preview",
     "lint": "eslint .",
-    "format": "prettier --write .",
-    "test": "vitest run",
-    "test:watch": "vitest"
+    "format": "prettier --write ."
   },
+  "dependencies": {
+    "@tanstack/start": "^1.110.0",
+    "@tanstack/react-router": "^1.110.0",
+    "vinxi": "^0.5.3",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1"
+  }}
   "overrides": {
     "rolldown": "1.2.1"
   },
