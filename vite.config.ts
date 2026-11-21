@@ -6,12 +6,11 @@
 // You can pass additional config via defineConfig({ vite: { ... }, etc... }) if needed.
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
-
 export default defineConfig({
   nitro: { preset: "node-server" },
   tanstackStart: {
-  client: { entry: "src/client.tsx" },
-  server: { entry: "src/server.ts" },
+    client: { entry: "src/client.tsx" },
+    server: { entry: "src/server.ts" },
     // Redirect TanStack Start's bundled server entry to src/server.ts (our SSR error wrapper).
     // nitro/vite builds from this
   },
