@@ -153,15 +153,41 @@
   }
 }
 
-@utility product-coral { background: oklch(0.93 0.045 32); color: oklch(0.53 0.13 31); }
-@utility product-yellow { background: oklch(0.95 0.06 96); color: oklch(0.55 0.11 85); }
-@utility product-green { background: oklch(0.93 0.04 155); color: oklch(0.46 0.1 155); }
-@utility product-blue { background: oklch(0.93 0.035 245); color: oklch(0.48 0.13 250); }
-@utility status-ready { background: oklch(0.93 0.05 155); color: oklch(0.4 0.12 155); }
-@utility status-new { background: oklch(0.93 0.04 250); color: oklch(0.45 0.14 250); }
-@utility status-printing { background: oklch(0.95 0.055 90); color: oklch(0.48 0.11 75); }
-@utility status-binding { background: oklch(0.93 0.045 25); color: oklch(0.5 0.15 25); }
-@utility order-ring { background: conic-gradient(var(--primary) 0 58%, var(--chart-2) 58% 82%, var(--chart-4) 82% 100%); }
+@utility product-coral {
+  background: oklch(0.93 0.045 32);
+  color: oklch(0.53 0.13 31);
+}
+@utility product-yellow {
+  background: oklch(0.95 0.06 96);
+  color: oklch(0.55 0.11 85);
+}
+@utility product-green {
+  background: oklch(0.93 0.04 155);
+  color: oklch(0.46 0.1 155);
+}
+@utility product-blue {
+  background: oklch(0.93 0.035 245);
+  color: oklch(0.48 0.13 250);
+}
+@utility status-ready {
+  background: oklch(0.93 0.05 155);
+  color: oklch(0.4 0.12 155);
+}
+@utility status-new {
+  background: oklch(0.93 0.04 250);
+  color: oklch(0.45 0.14 250);
+}
+@utility status-printing {
+  background: oklch(0.95 0.055 90);
+  color: oklch(0.48 0.11 75);
+}
+@utility status-binding {
+  background: oklch(0.93 0.045 25);
+  color: oklch(0.5 0.15 25);
+}
+@utility order-ring {
+  background: conic-gradient(var(--primary) 0 58%, var(--chart-2) 58% 82%, var(--chart-4) 82% 100%);
+}
 
 @utility no-scrollbar {
   scrollbar-width: none;
