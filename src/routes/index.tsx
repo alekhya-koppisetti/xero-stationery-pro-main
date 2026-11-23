@@ -21,13 +21,12 @@ import {
   Search,
   ShoppingBag,
   Smartphone,
-  Sparkles,
   Upload,
   UserRound,
   WalletCards,
   X,
 } from "lucide-react";
-import { useEffect, useMemo, useState } from "react";
+import { type FormEvent, useEffect, useMemo, useState } from "react";
 
 import { Button } from "@/components/ui/button";
 import { Checkbox } from "@/components/ui/checkbox";
@@ -132,6 +131,22 @@ const staffQueue = [
 function Index() {
   const [role, setRole] = useState<Role>("student");
   const [notificationsOpen, setNotificationsOpen] = useState(false);
+  const [signInRole, setSignInRole] = useState<Role | null>(null);
+  const [identifier, setIdentifier] = useState("");
+  const [password, setPassword] = useState("");
+
+  const openSignIn = (nextRole: Role) => {
+    setSignInRole(nextRole);
+    setIdentifier("");
+    setPassword("");
+  };
+
+  const completeSignIn = (event: FormEvent<HTMLFormElement>) => {
+    event.preventDefault();
+    if (!signInRole || !identifier.trim() || !password.trim()) return;
+    setRole(signInRole);
+    setSignInRole(null);
+  };
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -150,32 +165,17 @@ function Index() {
           </div>
 
           <div className="flex items-center gap-2 sm:gap-4">
-            <div className="flex rounded-lg bg-muted p-1" aria-label="Switch role">
-              <button
-                type="button"
-                aria-pressed={role === "student"}
-                onClick={() => setRole("student")}
-                className={cn(
-                  "h-9 rounded-md px-3 text-xs font-semibold transition-all sm:px-4 sm:text-sm",
-                  role === "student"
-                    ? "bg-card text-foreground shadow-sm"
-                    : "text-muted-foreground",
-                )}
-              >
-                Student Portal
-              </button>
-              <button
-                type="button"
-                aria-pressed={role === "staff"}
-                onClick={() => setRole("staff")}
-                className={cn(
-                  "h-9 rounded-md px-3 text-xs font-semibold transition-all sm:px-4 sm:text-sm",
-                  role === "staff" ? "bg-card text-foreground shadow-sm" : "text-muted-foreground",
-                )}
-              >
-                Staff Dashboard
-              </button>
-            </div>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => openSignIn("student")}
+              className="px-2 text-xs sm:px-3 sm:text-sm"
+            >
+              Student sign in
+            </Button>
+            <Button variant="outline" size="sm" onClick={() => openSignIn("staff")}>
+              Staff sign in
+            </Button>
             <Button
               variant="ghost"
               size="icon"
@@ -185,8 +185,11 @@ function Index() {
             >
               <Bell className="size-5" />
             </Button>
-            <div className="grid size-9 place-items-center rounded-full bg-secondary text-sm font-bold text-secondary-foreground">
-              AK
+            <div
+              className="grid size-9 place-items-center rounded-full bg-secondary text-sm font-bold text-secondary-foreground"
+              aria-label={role === "staff" ? "Staff account" : "Student account"}
+            >
+              {role === "staff" ? "ST" : "SU"}
             </div>
           </div>
         </div>
@@ -203,6 +206,57 @@ function Index() {
           </DialogHeader>
         </DialogContent>
       </Dialog>
+      <Dialog
+        open={signInRole !== null}
+        onOpenChange={(open) => {
+          if (!open) setSignInRole(null);
+        }}
+      >
+        <DialogContent className="max-w-md">
+          <DialogHeader>
+            <DialogTitle className="font-display text-xl">
+              {signInRole === "staff" ? "Staff sign in" : "Student sign in"}
+            </DialogTitle>
+            <DialogDescription>
+              {signInRole === "staff"
+                ? "Use your shop employee account to access the private dashboard."
+                : "Sign in with your student account to place and track print orders."}
+            </DialogDescription>
+          </DialogHeader>
+          <form onSubmit={completeSignIn} className="space-y-4">
+            <div className="space-y-2">
+              <label htmlFor="sign-in-identifier" className="text-sm font-semibold">
+                {signInRole === "staff" ? "Employee ID" : "Student email"}
+              </label>
+              <Input
+                id="sign-in-identifier"
+                type={signInRole === "staff" ? "text" : "email"}
+                placeholder={signInRole === "staff" ? "STAFF-001" : "you@college.edu"}
+                value={identifier}
+                onChange={(event) => setIdentifier(event.target.value)}
+                required
+              />
+            </div>
+            <div className="space-y-2">
+              <label htmlFor="sign-in-password" className="text-sm font-semibold">
+                Password
+              </label>
+              <Input
+                id="sign-in-password"
+                type="password"
+                placeholder="Enter your password"
+                value={password}
+                onChange={(event) => setPassword(event.target.value)}
+                required
+              />
+            </div>
+            <Button type="submit" className="w-full">
+              Sign in as {signInRole === "staff" ? "staff" : "student"}
+              <ArrowRight className="size-4" />
+            </Button>
+          </form>
+        </DialogContent>
+      </Dialog>
     </div>
   );
 }
@@ -212,7 +266,7 @@ function StudentPortal() {
   const [printType, setPrintType] = useState<"bw" | "color">("bw");
   const [paperSize, setPaperSize] = useState<"A4" | "A3">("A4");
   const [sides, setSides] = useState<"single" | "double">("double");
-  const [copies, setCopies] = useState(1);
+  const [copies, setCopies] = useState(0);
   const [pages, setPages] = useState(12);
   const [pageRange, setPageRange] = useState("All pages");
   const [fileError, setFileError] = useState<string | null>(null);
@@ -277,9 +331,6 @@ function StudentPortal() {
     <main className="mx-auto max-w-7xl px-4 py-8 sm:px-6 sm:py-10 lg:px-8">
       <section className="mb-8 flex flex-col justify-between gap-5 sm:flex-row sm:items-end">
         <div>
-          <p className="mb-2 flex items-center gap-2 text-sm font-semibold text-primary">
-            <Sparkles className="size-4" /> Welcome back, Alekhya
-          </p>
           <h1 className="font-display text-3xl font-bold sm:text-4xl">What do you need today?</h1>
           <p className="mt-2 max-w-xl text-muted-foreground">
             Place your order before class and pick it up when it’s ready.
@@ -396,7 +447,8 @@ function StudentPortal() {
                     variant="ghost"
                     size="icon"
                     className="size-9"
-                    onClick={() => setCopies(Math.max(1, copies - 1))}
+                    onClick={() => setCopies(Math.max(0, copies - 1))}
+                    disabled={copies === 0}
                     aria-label="Decrease copies"
                   >
                     <Minus className="size-4" />
